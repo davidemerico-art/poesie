@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Write() {
+  const [title, setTitle] = useState("");
   const [poem, setPoem] = useState("");
   const [result, setResult] = useState<any>(null);
   const [category, setCategory] = useState("");
@@ -33,11 +34,17 @@ export default function Write() {
     });
   };
 
-  //  Salvataggio poesia
+  
   const savePoem = () => {
+    if (!title.trim()) {
+      alert("Inserisci il titolo della poesia.");
+      return;
+    }
     const poems = JSON.parse(localStorage.getItem("poems") || "[]");
 
+
     const newPoem = {
+      title: title.trim(),
       text: poem,
       category,
       date: new Date().toLocaleString(),
@@ -47,6 +54,8 @@ export default function Write() {
     localStorage.setItem("poems", JSON.stringify(poems));
 
     alert("Poesia salvata!");
+    setTitle("");
+    setPoem("");
   };
 
   return (
@@ -56,10 +65,20 @@ export default function Write() {
         Categoria: {category}
       </h1>
 
+
+      {/* Titolo */}
+      <input
+        className="w-full p-3 border rounded mb-3"
+        placeholder="Titolo della poesia"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+
       {/* Textarea */}
       <textarea
         className="w-full h-40 p-3 border rounded"
         placeholder="Scrivi la tua poesia..."
+        value={poem}
         onChange={(e) => setPoem(e.target.value)}
       />
 
