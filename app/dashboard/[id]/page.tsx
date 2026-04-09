@@ -27,7 +27,7 @@ export default function PoemDetail() {
     }
   }, []);
 
-  // 🧠 stessa logica analisi
+  // logica analisi
   const generateAnalysis = (text: string, category: string) => {
     const lower = text.toLowerCase();
     const lines = text.split(/\n|\r/);
