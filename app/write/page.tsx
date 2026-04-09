@@ -19,29 +19,37 @@ export default function Write() {
 
     const cat = localStorage.getItem("category");
     if (cat) setCategory(cat);
-  }, []);
+  }, [router]);
 
-  //  Analisi poesia
-  const analyzePoem = () => {
-    let figures = [];
+  //  Analisi poesia con ia(api route)
+  const analyzePoem = async () => {
+    if (!poem.trim()) return;
 
-    if (poem.includes("come")) figures.push("Similitudine");
-    if (poem.includes("cuore")) figures.push("Metafora");
+    try {
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        body: JSON.stringify({ poem, category }),
+      });
 
-    setResult({
-      figures,
-      meaning: "La poesia esprime emozioni legate a " + category,
-    });
+      const data = await res.json();
+      setResult(data);
+    } catch (error) {
+      console.error(error);
+      setResult({
+        figures: [],
+        meaning: "Errore durante l'analisi",
+      });
+    }
   };
 
-  
+  //  Salvataggio poesia 
   const savePoem = () => {
     if (!title.trim()) {
       alert("Inserisci il titolo della poesia.");
       return;
     }
-    const poems = JSON.parse(localStorage.getItem("poems") || "[]");
 
+    const poems = JSON.parse(localStorage.getItem("poems") || "[]");
 
     const newPoem = {
       title: title.trim(),
@@ -64,7 +72,6 @@ export default function Write() {
       <h1 className="text-2xl font-bold mb-4">
         Categoria: {category}
       </h1>
-
 
       {/* Titolo */}
       <input
@@ -104,8 +111,10 @@ export default function Write() {
         <div className="mt-6 p-4 bg-gray-100 rounded">
           <h2 className="font-bold">Figure retoriche:</h2>
           <ul>
-            {result.figures.map((f: string) => (
-              <li key={f}>{f}</li>
+            {result.figures.map((f: any, i: number) => (
+              <li key={i}>
+                <strong>{f.name}</strong>: {f.explanation}
+              </li>
             ))}
           </ul>
 
