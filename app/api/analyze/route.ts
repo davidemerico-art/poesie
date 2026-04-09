@@ -1,53 +1,104 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { poem, category } = await req.json();
+  try {
+    const { poem, category } = await req.json();
 
-  const prompt = `
-Analizza questa poesia:
+    if (!poem || poem.trim() === "") {
+      return NextResponse.json({
+        figures: [],
+        meaning: "Nessuna poesia fornita",
+      });
+    }
 
-"${poem}"
+    const prompt = `
+Analizza questa poesia italiana.
 
-Categoria: ${category}
+POESIA:
+${poem}
 
-Restituisci:
-- Figure retoriche (nome + spiegazione)
-- Significato
+CATEGORIA:
+${category}
 
-Formato JSON:
-{
-  "figures": [
-    { "name": "", "explanation": "" }
-  ],
-  "meaning": ""
-}
+Rispondi in modo semplice e chiaro.
+
+IMPORTANTE:
+- Trova le figure retoriche presenti
+- Spiega il significato della poesia
+
+Rispondi SOLO in questo formato:
+
+FIGURE:
+- nome: spiegazione
+
+SIGNIFICATO:
+testo del significato
 `;
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "gpt-4.1-mini",
-      messages: [
-        { role: "system", content: "Sei un esperto di poesia." },
-        { role: "user", content: prompt }
-      ],
-    }),
-  });
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content:
+              "Sei un professore di letteratura italiana molto bravo a spiegare poesie in modo semplice.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        temperature: 0.7,
+      }),
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  try {
-    const content = data.choices[0].message.content;
-    const parsed = JSON.parse(content);
-    return NextResponse.json(parsed);
-  } catch {
+    console.log("OPENAI RESPONSE:", data);
+
+    const text = data?.choices?.[0]?.message?.content;
+
+    if (!text) {
+      return NextResponse.json({
+        figures: [],
+        meaning: "Errore: risposta vuota dall'AI",
+      });
+    }
+
+    //  PARSING SEMPLICE 
+    const parts = text.split("SIGNIFICATO:");
+
+    const figuresRaw = parts[0]?.replace("FIGURE:", "").trim();
+    const meaning = parts[1]?.trim() || "Nessun significato trovato";
+
+    const figures =
+      figuresRaw
+        ?.split("\n")
+        .filter((line: string) => line.includes("-"))
+        .map((line: string) => {
+          const clean = line.replace("-", "").split(":");
+          return {
+            name: clean[0]?.trim() || "Figura",
+            explanation: clean[1]?.trim() || "",
+          };
+        }) || [];
+
+    return NextResponse.json({
+      figures,
+      meaning,
+    });
+  } catch (error) {
+    console.error("API ERROR:", error);
+
     return NextResponse.json({
       figures: [],
-      meaning: "Errore nell'analisi"
+      meaning: "Errore del server",
     });
   }
 }
