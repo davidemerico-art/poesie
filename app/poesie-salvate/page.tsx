@@ -14,7 +14,8 @@ export default function PoesieSalvate() {
   }, []);
 
   const filteredPoems = poems.filter((p: any) =>
-    p.title?.toLowerCase().includes(search.toLowerCase())
+    p.title?.toLowerCase().includes(search.toLowerCase()) ||
+    p.category?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -24,7 +25,7 @@ export default function PoesieSalvate() {
       {/* Barra di ricerca */}
       <input
         className="w-full p-2 mb-6 border rounded"
-        placeholder="Cerca per titolo..."
+        placeholder="Cerca per titolo e categoria..."
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
@@ -34,16 +35,16 @@ export default function PoesieSalvate() {
         {filteredPoems.map((p, i) => (
           <div
             key={i}
-            className="p-4 bg-gray-100 rounded flex justify-between items-start hover:bg-purple-200"
+            className="p-4 bg-yellow-100 rounded flex justify-between items-start hover:bg-amber-200"
           >
             <div className="flex-1 cursor-pointer" onClick={() => router.push(`/dashboard/${poems.indexOf(p)}`)}>
-              <p className="text-lg font-bold text-purple-700">{p.title || "(Senza titolo)"}</p>
+              <p className="text-lg font-bold text-amber-700">{p.title || "(Senza titolo)"}</p>
               <p className="text-sm text-gray-500">{p.category}</p>
               <p className="font-semibold">{p.text.slice(0, 60)}...</p>
               <p className="text-xs text-gray-400 mt-1">{p.date}</p>
             </div>
             <button
-              className="ml-4 bg-red-400 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+              className="ml-4 bg-yellow-400 text-white px-2 py-1 rounded text-xs hover:bg-amber-600"
               onClick={() => {
                 const updated = poems.filter((_, idx) => idx !== poems.indexOf(p));
                 localStorage.setItem("poems", JSON.stringify(updated));

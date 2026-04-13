@@ -130,10 +130,11 @@ export default function PoemDetail() {
 
   return (
     <div className="min-h-screen p-6">
+      
 
       <button
         onClick={() => router.push("/dashboard")}
-        className="mb-4 bg-gray-500 text-white px-4 py-2 rounded"
+        className="mb-4 bg-yellow-500 text-white px-4 py-2 rounded"
       >
         ← Torna indietro
       </button>
@@ -142,12 +143,12 @@ export default function PoemDetail() {
         Categoria: {poem.category}
       </h1>
 
-      <div className="p-4 bg-gray-100 rounded whitespace-pre-line">
+      <div className="p-4 bg-amber-100 rounded whitespace-pre-line">
         {poem.text}
       </div>
 
       {analysis && (
-        <div className="mt-6 p-4 bg-white shadow rounded">
+        <div className="mt-6 p-4 bg-amber-100 shadow rounded">
 
 
           <h2 className="font-bold">Figure retoriche trovate:</h2>

@@ -22,8 +22,19 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="p-6 bg-white rounded-xl shadow w-80">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
+      
+      {/*  SFONDO */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center opacity-30"
+        style={{ 
+          backgroundImage: "url('https://img.freepik.com/foto-premium/un-libro-aperto-con-farfalle-che-volano-sopra-di-esso_818261-2019.jpg?w=360')" 
+        }}
+      ></div>
+
+      {/*  BOX LOGIN */}
+      <div className="relative z-10 p-6 bg-white rounded-xl shadow w-80">
+        
         <h1 className="text-2xl font-bold mb-4">Login</h1>
 
         <input
@@ -41,10 +52,11 @@ export default function Login() {
 
         <button
           onClick={handleLogin}
-          className="w-full bg-purple-600 text-white p-2 rounded"
+          className="w-full bg-amber-600 text-white p-2 rounded"
         >
           Accedi
         </button>
+
       </div>
     </div>
   );

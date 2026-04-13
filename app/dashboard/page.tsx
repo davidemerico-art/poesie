@@ -48,40 +48,51 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="relative min-h-screen p-6 overflow-hidden">
+      
+      {/*  SFONDO */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center opacity-30"
+        style={{ 
+          backgroundImage: "url('https://img.freepik.com/foto-premium/un-libro-aperto-con-farfalle-che-volano-sopra-di-esso_818261-2019.jpg?w=360')" 
+        }}
+      ></div>
 
-      <h1 className="text-3xl font-bold mb-6">Scegli una categoria</h1>
+      {/*  CONTENUTO */}
+      <div className="relative z-10">
+        
+        <h1 className="text-3xl font-bold mb-6">Scegli una categoria</h1>
 
-      <div className="grid grid-cols-2 gap-4">
-        {categories.map((cat) => (
+        <div className="grid grid-cols-2 gap-4">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => selectCategory(cat)}
+              className="p-4 bg-yellow-100 rounded-xl hover:bg-yellow-200"
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Pulsante poesie salvate */}
+        <div className="mt-8">
           <button
-            key={cat}
-            onClick={() => selectCategory(cat)}
-            className="p-4 bg-purple-100 rounded-xl hover:bg-purple-200"
+            onClick={() => router.push("/poesie-salvate")}
+            className="bg-amber-600 text-white px-4 py-2 rounded shadow hover:bg-amber-700"
           >
-            {cat}
+            Vai a tutte le poesie salvate
           </button>
-        ))}
-      </div>
+        </div>
 
-
-      {/* Pulsante per poesie salvate */}
-      <div className="mt-8">
         <button
-          onClick={() => router.push("/poesie-salvate")}
-          className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
+          onClick={logout}
+          className="mt-6 bg-amber-900 text-white px-4 py-2 rounded"
         >
-          Vai a tutte le poesie salvate
+          Logout
         </button>
+
       </div>
-
-      <button
-        onClick={logout}
-        className="mt-6 bg-red-500 text-white px-4 py-2 rounded"
-      >
-        Logout
-      </button>
-
     </div>
   );
 }

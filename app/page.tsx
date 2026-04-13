@@ -2,9 +2,18 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 dark:bg-black font-sans">
+    <div className="relative flex flex-col min-h-screen items-center justify-center bg-zinc-50 dark:bg-black font-sans overflow-hidden">
       
-      <main className="flex flex-col items-center text-center gap-8 p-10 max-w-2xl">
+      {/* SFONDO */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center opacity-30"
+        style={{ 
+          backgroundImage: "url('https://img.freepik.com/foto-premium/un-libro-aperto-con-farfalle-che-volano-sopra-di-esso_818261-2019.jpg?w=360')" 
+        }}
+      ></div>
+
+      {/* CONTENUTO */}
+      <main className="relative z-10 flex flex-col items-center text-center gap-8 p-10 max-w-2xl">
         
         {/* Titolo */}
         <h1 className="text-4xl font-bold text-black dark:text-white">
@@ -21,20 +30,20 @@ export default function Home() {
         <div className="flex gap-4 mt-4">
           
           <Link href="/login">
-            <button className="px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition">
+            <button className="px-6 py-3 bg-amber-500 text-white rounded-xl hover:bg-amber-700 transition">
               Login
             </button>
           </Link>
 
           <Link href="/register">
-            <button className="px-6 py-3 border border-purple-600 text-purple-600 rounded-xl hover:bg-purple-100 dark:hover:bg-zinc-800 transition">
+            <button className="px-6 py-3 border border-amber-600 text-amber-600 rounded-xl hover:bg-amber-100 dark:hover:bg-zinc-800 transition">
               Registrati
             </button>
           </Link>
 
         </div>
 
-        {/* Features */}
+        {/* FEATURES (COME LE VOLEVI TU) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
           
           <div className="p-4 bg-white dark:bg-zinc-900 rounded-xl shadow">
@@ -52,7 +61,7 @@ export default function Home() {
           </div>
 
           <div className="p-4 bg-white dark:bg-zinc-900 rounded-xl shadow">
-            <h3 className="font-semibold"> Significato</h3>
+            <h3 className="font-semibold">Significato</h3>
             <p className="text-sm text-zinc-500">
               Ottieni una spiegazione della tua poesia
             </p>

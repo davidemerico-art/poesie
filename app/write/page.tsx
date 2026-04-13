@@ -93,14 +93,14 @@ export default function Write() {
       <div className="flex gap-2 mt-4">
         <button
           onClick={analyzePoem}
-          className="bg-purple-600 text-white px-4 py-2 rounded"
+          className="bg-amber-600 text-white px-4 py-2 rounded"
         >
           Analizza
         </button>
 
         <button
           onClick={savePoem}
-          className="bg-green-600 text-white px-4 py-2 rounded"
+          className="bg-yellow-600 text-white px-4 py-2 rounded"
         >
           Salva
         </button>
