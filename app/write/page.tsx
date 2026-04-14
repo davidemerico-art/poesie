@@ -2,10 +2,22 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+type Figure = {
+  name: string;
+  explanation: string;
+  location?: string;
+};
+
+type AnalysisResult = {
+  figures: Figure[];
+  meaning: string;
+};
+
 export default function Write() {
   const [title, setTitle] = useState("");
   const [poem, setPoem] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [category, setCategory] = useState("");
   const router = useRouter();
 
@@ -26,19 +38,28 @@ export default function Write() {
     if (!poem.trim()) return;
 
     try {
+      setIsAnalyzing(true);
       const res = await fetch("/api/analyze", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ poem, category }),
       });
 
       const data = await res.json();
-      setResult(data);
+      setResult({
+        figures: Array.isArray(data?.figures) ? data.figures : [],
+        meaning: data?.meaning || "Errore durante l'analisi",
+      });
     } catch (error) {
       console.error(error);
       setResult({
         figures: [],
         meaning: "Errore durante l'analisi",
       });
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -56,6 +77,7 @@ export default function Write() {
       text: poem,
       category,
       date: new Date().toLocaleString(),
+      analysis: result,
     };
 
     poems.push(newPoem);
@@ -93,9 +115,10 @@ export default function Write() {
       <div className="flex gap-2 mt-4">
         <button
           onClick={analyzePoem}
-          className="bg-amber-600 text-white px-4 py-2 rounded"
+          disabled={isAnalyzing}
+          className="bg-amber-600 text-white px-4 py-2 rounded disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Analizza
+          {isAnalyzing ? "Analisi in corso..." : "Analizza"}
         </button>
 
         <button
@@ -111,9 +134,10 @@ export default function Write() {
         <div className="mt-6 p-4 bg-gray-100 rounded">
           <h2 className="font-bold">Figure retoriche:</h2>
           <ul>
-            {result.figures.map((f: any, i: number) => (
+            {result.figures.map((f, i: number) => (
               <li key={i}>
-                <strong>{f.name}</strong>: {f.explanation}
+                <strong>{f.name}</strong>
+                {f.location ? ` (${f.location})` : ""}: {f.explanation}
               </li>
             ))}
           </ul>
