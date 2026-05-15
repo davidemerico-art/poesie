@@ -19,6 +19,9 @@ export default function Dashboard() {
     "Riflessione ",
     "Speranza ",
     "Rabbia "
+    "Libertà",
+    "Tempo ",
+    "Memoria ",
   ];
 
   useEffect(() => {
